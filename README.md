@@ -1,6 +1,3 @@
-# investify
-A self contained stock exchange built for risk free paper trading
-__
 # Read Me Guide For Investify-v2
 > Investify-v2 is a full stack stock brooking web application developed and designed for beginners to learn to invest and trade whilst not having the risk of loosing all their capital. The application has a self contained
 environment in the form of ISE - Investify Stock Exchange, i.e The stock prices in the web application (or more specifically in the Investify Stock Exchange) can only be afffected by the users trading in the application.
@@ -40,6 +37,3 @@ To Run The Production Server:<br>
 <br>
 **Run Command:** *node app.js*<br>
 Navigate To http://localhost:5000 to check the production build
-
-
-edit navigated by
