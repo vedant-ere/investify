@@ -618,3 +618,10 @@ input {
 .line-height-main{
     line-height: 1.125rem;
 }
+.add-watch-inpt{
+    width: 200px;
+    margin: 10px 0px;
+    background: transparent;
+    color: white;
+    font-family: 'Roboto';
+}

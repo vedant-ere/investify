@@ -176,4 +176,21 @@ export async function isShareAvailable(userID, shareName, qty) {
   }
 }
 
-// await addWishlist("T3owCrcw3BCGp165");
+export async function createNewWatchlist(userID, watchListName) {
+  const Database = mongoose.connection;
+  const collection = Database.collection('users');
+  try {
+      const user = await collection.findOne({ uuID: userID });
+      if (!user) {
+          throw new Error("User not found");
+      }
+      await collection.updateOne(
+          { uuID: userID }, 
+          { $push: { watchlists: watchListName } }
+      );
+      return true;
+  } catch (err) {
+      console.error("Error:", err);
+      return false;
+  }
+}
