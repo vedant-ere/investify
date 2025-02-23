@@ -173,7 +173,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const user = new mongoose.model('users', userSchema);
-import { addUserSharesIntoMongoDB, fetchChangefromDB, findandUpdateUserId, findUser, findWishlist, getLowerCircuit, getUpperCircuit, isShareAvailable, updateIntoMongoDB } from './searchIntoUser.js';
+import { addUserSharesIntoMongoDB, createNewWatchlist, fetchChangefromDB, findandUpdateUserId, findUser, findWishlist, getLowerCircuit, getUpperCircuit, isShareAvailable, updateIntoMongoDB } from './searchIntoUser.js';
 import OrderBook from './priorityQueue.js';
 app.post('/verify-otp', async (req, res) => {
   try {
@@ -345,6 +345,20 @@ app.get('/api/invest/users/getAlerts/completed',authetication,async (req,res)=>{
       res.status(200).send(completedAlertsArray); 
     }else{
       res.status(204).send("No Change");
+    }
+  }catch(err){
+    console.log(err);
+  }
+})
+
+app.post('/api/invest/users/createNewWatchList',authetication,async(req,res)=>{
+  try{
+    const data = await createNewWatchlist(req.session.userId,req.body.watchName);
+    if (data){
+      res.status(200).send({"success":true});
+    }
+    if (!data){
+      res.status(401).send({"success":false});
     }
   }catch(err){
     console.log(err);

@@ -31,6 +31,9 @@ export default function Charting() {
   const [wishlist, setWishlist] = useState([]);
   const [currentList, setCurrentList] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [showMsg, setShowMsg] = useState(false);
+  const [watchName, setWatchName] = useState("");
   
   const handleBookmarkClick = (item) => {
     setSelectedItem(item);
@@ -225,7 +228,30 @@ export default function Charting() {
     }
   };
 
+  const inpNewWatchlist = async (e) => {
+    e.preventDefault();
+    if (showAdd){
+      setShowAdd(false);
+    } 
+    if (!showAdd){
+      setShowAdd(true);
+    }
+  }
 
+  const createNewWatchList = async (e) => {
+    e.preventDefault();
+    if (wishlist.includes(watchName)) {
+        setShowMsg(true);
+        return;
+    }
+    try {
+        await axios.post("http://localhost:5000/api/invest/users/createNewWatchList", { watchName });
+        setWishlist([...wishlist, watchName]);
+        setShowMsg(false);
+    } catch (err) {
+        console.log("Error creating watchlist:", err);
+    }
+  };
   const data = {
     labels: ['', '', '', '','', '', '', '','', '', '','','','','','','','','',"",'','',"","","","","","","","","",'', '', '', '','', '', '', '','', '', '','','','','','','','','',"",'','',"","","","","","","","","",'', '', '', '','', '', '', '','', '', '','','','','','','','','',"",'','',"","","","","","","","","",'', '', '', '','', '', '', '','', '', '','','','','','','','','',"",'','',"","","","","","","","",""],
     datasets: [
@@ -265,7 +291,7 @@ export default function Charting() {
                 </span>
               </button>
             ))}
-            <button className='primary-flex align-center width-full bg-remove mar-top-sml'>
+            <button className='primary-flex align-center width-full bg-remove mar-top-sml' onClick={(e)=>{inpNewWatchlist(e)}}>
               <span className='float-10 primary-flex justify-start whiten'>
                 <ion-icon name="add-circle-outline" size="large"></ion-icon>
               </span>
@@ -273,10 +299,26 @@ export default function Charting() {
                 Create New Wishlist
               </span>
             </button>
+            {showAdd?(
+              <input placeholder='Name Your Watchlist!' type='text' name='watchName' className='add-watch-inpt'value={watchName}onChange={(e) => setWatchName(e.target.value)}/>
+            ):(
+              <div></div>
+            )}
+            {showMsg?(
+              <div>WishList Already Exists!</div>
+            ):(
+              <div></div>
+            )}
             <div className='primary-flex justify-center'>
-              <button className='primary-flex align-center justify-center mar-top-sml bg-active width-max continue-btn'>
-                <span className='primary-flex justify-start mar-right buy-stock-head whiten bg-remove mar-left'>Save</span>
-              </button>
+              {showAdd?(
+                <button className='primary-flex align-center justify-center mar-top-sml bg-active width-max continue-btn'>
+                  <span className='primary-flex justify-start mar-right buy-stock-head whiten bg-remove mar-left' onClick={(e)=>{createNewWatchList(e)}}>Create New Watchlist</span>
+                </button>
+              ):(
+                <button className='primary-flex align-center justify-center mar-top-sml bg-active width-max continue-btn'>
+                  <span className='primary-flex justify-start mar-right buy-stock-head whiten bg-remove mar-left'>Save</span>
+                </button>
+              )}
             </div>
           </form>
         </div>
