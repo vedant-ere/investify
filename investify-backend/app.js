@@ -235,7 +235,7 @@ app.get('/api/invest/getChart/:shareName', authetication ,async (req,res)=>{
 })
 
 import { getShareDetails } from './searchIntoUser.js';
-import { addAlert, addOrderIntoDatabase, addToWatchList, alertCheck, getGraphData, getUserInvestments, getUserTotalInvestment, stockPriceUpdateMain } from './SQLconnections.js';
+import { addAlert, addOrderIntoDatabase, addToWatchList, alertCheck, getAllAlerts, getGraphData, getUserInvestments, getUserTotalInvestment, stockPriceUpdateMain } from './SQLconnections.js';
 import getOrderDate from './calculateOrderDate.js';
 
 app.get('/api/invest/equity/getDetails/:shareName', authetication ,async (req,res)=>{
@@ -312,6 +312,45 @@ app.post('/api/invest/users/setAlert',authetication,async(req,res)=>{
   }
 })
 
+app.get('/api/invest/users/getAlerts/all',authetication,async (req,res)=>{
+  try{
+    const allAlertsArray = await getAllAlerts(req.session.userId);
+    if (allAlertsArray){
+      res.status(200).send(allAlertsArray); 
+    }else{
+      res.status(204).send("No Change");
+    }
+  }catch(err){
+    console.log(err);
+  }
+})
+
+app.get('/api/invest/users/getAlerts/pending',authetication,async (req,res)=>{
+  try{
+    const pendingAlertsArray = await getAllPendingAlerts(req.session.userId);
+    if (allAlertsArray){
+      res.status(200).send(pendingAlertsArray); 
+    }else{
+      res.status(204).send("No Change");
+    }
+  }catch(err){
+    console.log(err);
+  }
+})
+
+app.get('/api/invest/users/getAlerts/completed',authetication,async (req,res)=>{
+  try{
+    const completedAlertsArray = await getAllCompletedAlerts(req.session.userId);
+    if (allAlertsArray){
+      res.status(200).send(completedAlertsArray); 
+    }else{
+      res.status(204).send("No Change");
+    }
+  }catch(err){
+    console.log(err);
+  }
+})
+
 app.get('/invest/equity', async (req, res) => {
   if (!req.session.token) {
     req.session.token = jwt.sign({ userId: req.session.userId }, jwtSecret, { expiresIn: '2h' });
@@ -328,12 +367,12 @@ app.get('*', (req, res) => {
 });
 
 setInterval(async () => {
-  // const now = new Date();
-  // const hours = now.getHours();
-  // const minutes = now.getMinutes();
-  // if (hours === 10 || (hours === 11 && minutes < 60)) {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  if (hours === 10 || (hours === 11 && minutes < 60)) {
     await stockPriceUpdateMain();
-  // }
+  }
 }, 60000);
 
 const port = process.env.PORT || 5000;
