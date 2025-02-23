@@ -187,4 +187,44 @@ export async function getUserTotalInvestment(userID) {
     return totalInvestment;
 }
 
+export async function getAllAlerts(userID) {
+    const query = `SELECT * FROM alerts WHERE alerts.userID = ?`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userID], function (err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(Array.isArray(result) ? result : []);
+            }
+        });
+    });
+}
+
+export async function getAllPendingAlerts(userID){
+    const query = `SELECT * FROM alerts WHERE alerts.status = "pending" AND alerts.userID = ?`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userID], function (err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(Array.isArray(result) ? result : []);
+            }
+        });
+    });
+}
+
+export async function getAllCompletedAlerts(userID){
+    const query = `SELECT * FROM alerts WHERE alerts.status = "completed" AND alerts.userID = ?`;
+    return new Promise((resolve, reject) => {
+        connection.query(query, [userID], function (err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(Array.isArray(result) ? result : []);
+            }
+        });
+    });
+}
+
 // console.log(await alertCheck("OLAELEC",100.53));
+// console.log(await getAllCompletedAlerts("T3owCrcw3BCGp165"));
