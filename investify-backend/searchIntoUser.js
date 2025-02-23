@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-// import getOrderDate, { getCurrentMySQLTime } from "./calculateOrderDate.js";
+import getOrderDate, { getCurrentMySQLTime } from "./calculateOrderDate.js";
 dotenv.config();
 const mongoURI = process.env.MONGO_URI;
 mongoose.connect("mongodb://localhost:27017/Investify")
@@ -131,6 +131,19 @@ export async function addUserSharesIntoMongoDB(userID,shareName,noOfShares) {
   }
 }
 
+export async function findWishlist(userID){
+  const database = mongoose.connection;
+  const collection = database.collection('users');
+  try{
+    const result = await collection.findOne({uuID:userID});
+    if (result){
+      return result.watchlists;
+    }
+  }catch(err){
+    console.log(err);
+  }
+}
+
 export async function isShareAvailable(userID, shareName, qty) {
   const Database = mongoose.connection;
   const collection = Database.collection('users');
@@ -162,3 +175,5 @@ export async function isShareAvailable(userID, shareName, qty) {
     return false;
   }
 }
+
+// await addWishlist("T3owCrcw3BCGp165");
